@@ -3,14 +3,13 @@
 # Start the Work Schedule service
 # ==============================================================================
 
-# If MODE is not already set by env, try bashio, fallback to 'standalone'
-if [ -z "$MODE" ]; then
-  MODE=$(bashio::config 'mode' 'standalone' 2>/dev/null || echo 'standalone')
-fi
+# Mode: try bashio config, fallback to 'addon'
+MODE=$(bashio::config 'mode' 2>/dev/null || echo 'addon')
 export MODE
 
 # DB path
-export DB_PATH="${DB_PATH:-/data/work_schedule.db}"
+DB_PATH="${DB_PATH:-/data/work_schedule.db}"
+export DB_PATH
 
 # Ensure the database directory exists
 mkdir -p "$(dirname "$DB_PATH")"
