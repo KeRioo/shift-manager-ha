@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Schedule</title>
+  <link rel="stylesheet" href="/ui/style.css" />
+</head>
+<body>
+  <header>
+    <h1>📅 Work Schedule</h1>
+    <nav>
+      <button class="tab active" data-view="calendar">Kalendarz</button>
+      <button class="tab" data-view="timeline">Timeline</button>
+      <button class="tab" data-view="history">Historia</button>
+    </nav>
+  </header>
+
+  <!-- ── Paint toolbar ───────────────────────────── -->
+  <div id="paint-toolbar" class="paint-toolbar">
+    <span class="toolbar-label">Narzędzie:</span>
+    <button class="paint-btn" data-tool="day8"><i class="dot dot-day8"></i> Dzienna 8h</button>
+    <button class="paint-btn" data-tool="day12"><i class="dot dot-day12"></i> Dzienna 12h</button>
+    <button class="paint-btn" data-tool="night12"><i class="dot dot-night12"></i> Nocna 12h</button>
+    <button class="paint-btn paint-btn-eraser" data-tool="eraser">🧹 Usuń</button>
+    <button class="paint-btn paint-btn-off" data-tool="" title="Wyłącz narzędzie">✕</button>
+  </div>
+
+  <main>
+    <!-- ── Calendar view ────────────────────────────── -->
+    <section id="view-calendar" class="view active">
+      <div class="calendar-controls">
+        <button id="prev-quarter">◀ Poprzedni</button>
+        <span id="quarter-label"></span>
+        <button id="next-quarter">Następny ▶</button>
+      </div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </section>
+
+    <!-- ── Timeline view ────────────────────────────── -->
+    <section id="view-timeline" class="view">
+      <div class="calendar-controls">
+        <button id="tl-prev">◀ Poprzedni</button>
+        <span id="tl-label"></span>
+        <button id="tl-next">Następny ▶</button>
+      </div>
+      <div class="tl-legend">
+        <span class="tl-legend-item"><i class="dot dot-day8"></i>Dzienna 8h</span>
+        <span class="tl-legend-item"><i class="dot dot-day12"></i>Dzienna 12h</span>
+        <span class="tl-legend-item"><i class="dot dot-night12"></i>Nocna 12h</span>
+      </div>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <!-- ── History view ─────────────────────────────── -->
+    <section id="view-history" class="view">
+      <button id="undo-btn" class="btn-undo">↩ Undo</button>
+      <table id="history-table">
+        <thead>
+          <tr><th>Czas</th><th>Data</th><th>Zmiana</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- ── Edit modal ──────────────────────────────── -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <h3 id="modal-title">Edycja zmiany</h3>
+      <div class="modal-body">
+        <label>
+          Typ zmiany:
+          <select id="modal-type">
+            <option value="">— brak —</option>
+            <option value="day8">Dzienna 8h (07:00–15:00)</option>
+            <option value="day12">Dzienna 12h (07:00–19:00)</option>
+            <option value="night12">Nocna 12h (19:00–07:00)</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button id="modal-save" class="btn-primary">Zapisz</button>
+        <button id="modal-delete" class="btn-danger">Usuń</button>
+        <button id="modal-cancel">Anuluj</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/ui/app.js"></script>
+</body>
+</html>

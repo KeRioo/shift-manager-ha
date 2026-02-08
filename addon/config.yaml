@@ -1,0 +1,21 @@
+name: Work Schedule
+version: 1.0.0
+slug: work_schedule
+description: Shift/work schedule manager with quarterly calendar, undo support, and HA sensors
+url: "https://github.com/example/shift-manager-ha"
+startup: services
+arch:
+  - amd64
+  - aarch64
+  - armv7
+  - i386
+ports:
+  8000/tcp: 8000
+ports_description:
+  8000/tcp: "Web UI and API"
+map:
+  - config:rw
+options:
+  mode: standalone
+schema:
+  mode: "str"

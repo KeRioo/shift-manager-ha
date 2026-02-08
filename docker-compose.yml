@@ -1,0 +1,17 @@
+# Work Schedule – development compose
+# Run: docker compose -f docker-compose.dev.yml up --build
+
+services:
+  work-schedule:
+    build: ./addon
+    ports:
+      - "8000:8000"
+    environment:
+      - MODE=standalone
+      - DB_PATH=/data/work_schedule.db
+    volumes:
+      - schedule-data:/data
+    restart: unless-stopped
+
+volumes:
+  schedule-data:
