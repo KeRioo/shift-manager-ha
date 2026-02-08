@@ -3,7 +3,9 @@
 
 services:
   work-schedule:
-    build: ./addon
+    build:
+      context: ./addon
+      dockerfile: Dockerfile.dev
     ports:
       - "8000:8000"
     environment:
