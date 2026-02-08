@@ -17,13 +17,17 @@ PLATFORMS = [Platform.SENSOR]
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Set up from YAML configuration."""
-    if DOMAIN not in config:
-        return True
-
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN]["config"] = config[DOMAIN]
-
-    _LOGGER.info("Work Schedule: loading sensor platform with config %s", config[DOMAIN])
+    
+    if DOMAIN not in config:
+        # No YAML config - use defaults (auto-discover add-on)
+        _LOGGER.info("Work Schedule: No configuration.yaml entry found, using add-on defaults")
+        hass.data[DOMAIN]["config"] = {}
+    else:
+        hass.data[DOMAIN]["config"] = config[DOMAIN]
+        _LOGGER.info("Work Schedule: loading with config %s", config[DOMAIN])
+    
+    # Always load sensors (with defaults or YAML config)
     await async_load_platform(hass, Platform.SENSOR, DOMAIN, {}, config)
     return True
 

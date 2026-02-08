@@ -53,25 +53,27 @@ uvicorn app.main:app --reload --port 8000
 
 ## Home Assistant integration
 
-Copy `custom_components/work_schedule/` into your HA config directory.
+### Method 1: With Add-on (recommended)
 
-Add to `configuration.yaml`:
-
-```yaml
-work_schedule:
-  host: <addon-ip>
-  port: 8000
-```
+1. Add this repo as a HA add-on repository
+2. Install **Work Schedule** add-on
+3. Start the add-on
+4. Copy `custom_components/work_schedule/` to your HA `config/custom_components/` directory
+5. Restart Home Assistant
+6. Sensors will automatically discover the add-on (no configuration.yaml needed!)
 
 Sensors created:
 - `sensor.next_shift_time` (device_class: timestamp)
 - `sensor.next_shift_type`
 
+### Method 2: External API server
+
+If running the API server externally (not as add-on), add to `configuration.yaml`:
+
+```yaml
+work_schedule:
+  host: 192.168.1.100  # Your API server IP
+  port: 8000
+```
+
 Polling interval: **5 minutes**.
-
-## HA Add-on installation
-
-1. Add this repo as a HA add-on repository
-2. Install **Work Schedule**
-3. Start the add-on
-4. Access the UI from the add-on's **Web UI** button

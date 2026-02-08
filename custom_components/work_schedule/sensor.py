@@ -22,11 +22,26 @@ from .const import (
     DEFAULT_HOST,
     DEFAULT_PORT,
     SCAN_INTERVAL_SECONDS,
+    ADDON_HOSTNAMES,
 )
 
 _LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(seconds=SCAN_INTERVAL_SECONDS)
+
+
+async def _test_connection(host: str, port: int) -> bool:
+    """Test if the API is reachable at given host:port."""
+    url = f"http://{host}:{port}/health"
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=3)) as resp:
+                if resp.status == 200:
+                    _LOGGER.info("Successfully connected to Work Schedule API at %s:%s", host, port)
+                    return True
+    except Exception as e:
+        _LOGGER.debug("Could not connect to %s:%s - %s", host, port, e)
+    return False
 
 
 async def async_setup_platform(
@@ -37,10 +52,33 @@ async def async_setup_platform(
 ) -> None:
     """Set up sensors from YAML platform config."""
     conf = hass.data.get(DOMAIN, {}).get("config", {})
-    host = conf.get(CONF_HOST, DEFAULT_HOST)
+    
+    # Get host/port from config or use defaults
+    configured_host = conf.get(CONF_HOST)
     port = conf.get(CONF_PORT, DEFAULT_PORT)
+    
+    # If no host configured, try auto-discovery
+    if not configured_host:
+        _LOGGER.info("No host configured, attempting auto-discovery of add-on...")
+        host = None
+        for hostname in ADDON_HOSTNAMES:
+            _LOGGER.debug("Trying hostname: %s", hostname)
+            if await _test_connection(hostname, port):
+                host = hostname
+                break
+        
+        if not host:
+            _LOGGER.error(
+                "Could not auto-discover Work Schedule add-on. Tried: %s. "
+                "Please add configuration in configuration.yaml",
+                ADDON_HOSTNAMES
+            )
+            host = DEFAULT_HOST  # Use default anyway, will log errors on update
+    else:
+        host = configured_host
+        _LOGGER.info("Using configured host: %s", host)
+    
     base_url = f"http://{host}:{port}"
-
     _LOGGER.info("Setting up Work Schedule sensors with base_url: %s", base_url)
 
     async_add_entities(

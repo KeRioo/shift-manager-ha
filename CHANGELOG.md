@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.5] - 2026-02-08
+
+### Fixed
+- **Auto-discovery**: Integration now automatically discovers add-on (no configuration.yaml needed!)
+- Added connection testing with multiple hostname fallbacks
+- Integration loads even without YAML config (uses sensible defaults)
+- Enhanced logging for troubleshooting sensor setup
+
+### Changed
+- README updated with clearer installation instructions
+- configuration.yaml is now optional when using add-on
+
 ## [1.0.4] - 2026-02-08
 
 ### Fixed
