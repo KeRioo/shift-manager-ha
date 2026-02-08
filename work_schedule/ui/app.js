@@ -2,7 +2,11 @@
    Work Schedule – frontend application (plain JS, no framework)
    ================================================================ */
 
-const API = window.location.origin;
+// Detect base path (handles HA ingress: /api/hassio_ingress/<token>/)
+const BASE_PATH = document.baseURI
+  ? new URL(document.baseURI).pathname.replace(/\/$/, '')
+  : '';
+const API = window.location.origin + BASE_PATH;
 
 // ── State ───────────────────────────────────────────────────────
 let quarterOffset = 0;          // 0 = current quarter
