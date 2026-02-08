@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.const import Platform
 
 from .const import DOMAIN
@@ -22,7 +23,8 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN]["config"] = config[DOMAIN]
 
-    hass.helpers.discovery.load_platform("sensor", DOMAIN, {}, config)
+    _LOGGER.info("Work Schedule: loading sensor platform with config %s", config[DOMAIN])
+    await async_load_platform(hass, Platform.SENSOR, DOMAIN, {}, config)
     return True
 
 

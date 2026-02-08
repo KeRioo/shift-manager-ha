@@ -11,13 +11,14 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorDeviceClass,
 )
-from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .const import (
     DOMAIN,
+    CONF_HOST,
+    CONF_PORT,
     DEFAULT_HOST,
     DEFAULT_PORT,
     SCAN_INTERVAL_SECONDS,
