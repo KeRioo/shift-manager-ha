@@ -1,5 +1,5 @@
 name: Work Schedule
-version: 1.0.0
+version: 1.0.1
 slug: work_schedule
 description: Shift/work schedule manager with quarterly calendar, undo support, and HA sensors
 url: "https://github.com/KeRioo/shift-manager-ha"

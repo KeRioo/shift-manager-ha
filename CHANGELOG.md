@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.1] - 2026-02-08
+
+### Fixed
+- Restructured repo for HA add-on discovery (`addon/` → `work_schedule/`)
+- Added `repository.yaml` and `build.yaml` for valid HA add-on repository
+- Added `image` field in `config.yaml` for pre-built Docker images
+- Added GitHub Actions builder workflow for automatic image builds
+- Removed unsupported architectures (armv7, i386)
+- Fixed `s6-overlay-suexec: can only run as pid 1` with separate `Dockerfile.dev`
+
 ## [1.0.0] - 2026-02-08
 
 ### Added
