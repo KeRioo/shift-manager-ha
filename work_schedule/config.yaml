@@ -7,8 +7,7 @@ startup: services
 arch:
   - amd64
   - aarch64
-  - armv7
-  - i386
+image: "ghcr.io/kerioo/{arch}-addon-work-schedule"
 ingress: true
 ingress_port: 8000
 panel_icon: "mdi:calendar-clock"

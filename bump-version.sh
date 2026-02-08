@@ -18,8 +18,8 @@ ROOT="$SCRIPT_DIR"
 echo "🔄 Bumping version to $NEW_VERSION ..."
 
 # 1. addon/config.yaml
-sed -i "s/^version: .*/version: $NEW_VERSION/" "$ROOT/addon/config.yaml"
-echo "  ✅ addon/config.yaml"
+sed -i "s/^version: .*/version: $NEW_VERSION/" "$ROOT/work_schedule/config.yaml"
+echo "  ✅ work_schedule/config.yaml"
 
 # 2. custom_components/work_schedule/manifest.json
 sed -i "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" "$ROOT/custom_components/work_schedule/manifest.json"
