@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.2] - 2026-02-08
+
+### Fixed
+- Fixed s6-overlay PID 1 issue: `run.sh` moved to `/etc/services.d/work-schedule/run` for proper s6 service management
+
 ## [1.0.1] - 2026-02-08
 
 ### Fixed
