@@ -1,0 +1,21 @@
+#!/command/with-contenv bashio
+# ==============================================================================
+# Start the Work Schedule service
+# ==============================================================================
+
+# If MODE is not already set by env, try bashio, fallback to 'standalone'
+if [ -z "$MODE" ]; then
+  MODE=$(bashio::config 'mode' 'standalone' 2>/dev/null || echo 'standalone')
+fi
+export MODE
+
+# DB path
+export DB_PATH="${DB_PATH:-/data/work_schedule.db}"
+
+# Ensure the database directory exists
+mkdir -p "$(dirname "$DB_PATH")"
+
+bashio::log.info "Starting Work Schedule add-on (mode=${MODE}, db=${DB_PATH})"
+
+cd /app
+exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --log-level info

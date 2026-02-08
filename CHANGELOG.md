@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3] - 2026-02-08
+
+### Fixed
+- Migrated from s6-overlay v2 (`/etc/services.d/`) to v3 (`/etc/s6-overlay/s6-rc.d/`) structure
+- Added proper `type` (longrun), `run`, `finish` service files and `user/contents.d/` registration
+- Fixed shebang to `#!/command/with-contenv bashio` (v3 syntax)
+
 ## [1.0.2] - 2026-02-08
 
 ### Fixed

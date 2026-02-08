@@ -14,6 +14,5 @@ COPY ui/ ./ui/
 
 RUN mkdir -p /data
 
-# s6-overlay service: run.sh is called by s6 as a long-running service
-COPY run.sh /etc/services.d/work-schedule/run
-RUN chmod a+x /etc/services.d/work-schedule/run
+# Copy root filesystem overlay (s6 service scripts)
+COPY rootfs /
