@@ -11,6 +11,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ ./app/
 COPY ui/ ./ui/
-COPY run.sh /
 
-RUN chmod a+x /run.sh && mkdir -p /data
+RUN mkdir -p /data
+
+# s6-overlay service: run.sh is called by s6 as a long-running service
+COPY run.sh /etc/services.d/work-schedule/run
+RUN chmod a+x /etc/services.d/work-schedule/run
