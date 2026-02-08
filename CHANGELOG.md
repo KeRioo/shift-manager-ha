@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4] - 2026-02-08
+
+### Fixed
+- Fixed custom_components integration: async_load_platform, correct CONF_HOST/PORT imports
+- Updated DEFAULT_HOST to correct add-on hostname (`b467121c-work-schedule`)
+- Added debug logging for sensor setup and API calls
+
 ## [1.0.3] - 2026-02-08
 
 ### Fixed

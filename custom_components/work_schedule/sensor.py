@@ -41,6 +41,8 @@ async def async_setup_platform(
     port = conf.get(CONF_PORT, DEFAULT_PORT)
     base_url = f"http://{host}:{port}"
 
+    _LOGGER.info("Setting up Work Schedule sensors with base_url: %s", base_url)
+
     async_add_entities(
         [
             NextShiftTimeSensor(base_url),
@@ -82,10 +84,14 @@ class NextShiftTimeSensor(SensorEntity):
         self._extra: dict = {}
 
     async def async_update(self) -> None:
+        _LOGGER.debug("Updating NextShiftTimeSensor from %s", self._base_url)
         data = await _fetch_next_shift(self._base_url)
         if data:
             # value like "2026-02-09T07:00"
             self._attr_native_value = data.get("datetime")
+            _LOGGER.debug("NextShiftTimeSensor updated: %s", self._attr_native_value)
+        else:
+            _LOGGER.warning("NextShiftTimeSensor: no data from API")
             self._extra = data
         else:
             self._attr_native_value = None
@@ -114,12 +120,15 @@ class NextShiftTypeSensor(SensorEntity):
         self._extra: dict = {}
 
     async def async_update(self) -> None:
+        _LOGGER.debug("Updating NextShiftTypeSensor from %s", self._base_url)
         data = await _fetch_next_shift(self._base_url)
         if data:
             self._attr_native_value = data.get("type")
             self._extra = data
+            _LOGGER.debug("NextShiftTypeSensor updated: %s", self._attr_native_value)
         else:
             self._attr_native_value = None
+            _LOGGER.warning("NextShiftTypeSensor: no data from API")
 
     @property
     def extra_state_attributes(self) -> dict:
