@@ -1,9 +1,9 @@
 {
   "domain": "work_schedule",
   "name": "Work Schedule",
-  "codeowners": [],
+  "codeowners": ["@KeRioo"],
   "config_flow": false,
-  "documentation": "https://github.com/example/shift-manager-ha",
+  "documentation": "https://github.com/KeRioo/shift-manager-ha",
   "iot_class": "local_polling",
   "requirements": [],
   "version": "1.0.0"
