@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.6] - 2026-03-23
+
+### Changed
+- **Calendar view**: now shows a single month at a time with month-by-month navigation (instead of full quarter)
+- **Timeline view**: on mobile (≤480 px) day columns now fill the available width without horizontal scrolling; day-of-week labels hidden on small screens
+
+### Added
+- `.gitignore` to exclude `__pycache__` and build artifacts
+
 ## [1.0.5] - 2026-02-08
 
 ### Fixed
