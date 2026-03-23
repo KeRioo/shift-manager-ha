@@ -1,0 +1,119 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (semver, e.g. 1.0.6)"
+        required: true
+        default: "1.0.6"
+      changelog:
+        description: "Changelog notes for this release (markdown supported)"
+        required: false
+        default: ""
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Release v${{ inputs.version }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Validate version format
+        run: |
+          if ! echo "${{ inputs.version }}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Invalid version format. Use semver: X.Y.Z"
+            exit 1
+          fi
+
+      - name: Check out main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version in project files
+        run: |
+          VERSION="${{ inputs.version }}"
+          sed -i "s/^version: .*/version: $VERSION/" work_schedule/config.yaml
+          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" custom_components/work_schedule/manifest.json
+          echo "✅ Version bumped to $VERSION"
+
+      - name: Set release date
+        run: echo "RELEASE_DATE=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+
+      - name: Prepend CHANGELOG entry
+        run: |
+          python3 - <<'PYEOF'
+          import os, sys
+          version = os.environ["INPUT_VERSION"]
+          date    = os.environ["RELEASE_DATE"]
+          notes   = os.environ.get("INPUT_CHANGELOG", "").strip() or f"- Release v{version}"
+          path    = "CHANGELOG.md"
+          content = open(path).read()
+          marker  = f"## [{version}]"
+          if marker in content:
+              print(f"Version {version} already in CHANGELOG.md - skipping")
+              sys.exit(0)
+          header_end = content.index("\n") + 1
+          block = f"\n## [{version}] - {date}\n\n{notes}\n"
+          content = content[:header_end] + block + content[header_end:]
+          open(path, "w").write(content)
+          print("CHANGELOG.md updated")
+          PYEOF
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_CHANGELOG: ${{ inputs.changelog }}
+
+      - name: Commit version bump
+        run: |
+          VERSION="${{ inputs.version }}"
+          git add work_schedule/config.yaml custom_components/work_schedule/manifest.json CHANGELOG.md
+          # Only commit if there are staged changes
+          if git diff --cached --quiet; then
+            echo "ℹ️  No changes to commit (version already up to date)"
+          else
+            git commit -m "release: v${VERSION}"
+            git push origin main
+            echo "✅ Committed and pushed to main"
+          fi
+
+      - name: Create and push tag
+        run: |
+          TAG="v${{ inputs.version }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "ℹ️  Tag $TAG already exists — skipping"
+          else
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+            echo "✅ Tag $TAG created and pushed"
+          fi
+
+      - name: Extract changelog notes for this version
+        id: notes
+        run: |
+          VERSION="${{ inputs.version }}"
+          NOTES=$(awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md | sed '/^[[:space:]]*$/d')
+          if [[ -z "$NOTES" ]]; then
+            NOTES="${{ inputs.changelog }}"
+          fi
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ inputs.version }}"
+          name: "v${{ inputs.version }}"
+          body: ${{ steps.notes.outputs.notes }}
+          draft: false
+          prerelease: false
