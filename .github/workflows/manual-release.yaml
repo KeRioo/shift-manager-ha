@@ -19,6 +19,7 @@ jobs:
 
     permissions:
       contents: write
+      actions: write
 
     steps:
       - name: Validate version format
@@ -117,3 +118,11 @@ jobs:
           body: ${{ steps.notes.outputs.notes }}
           draft: false
           prerelease: false
+
+      - name: Trigger Docker image build and publish
+        run: |
+          gh workflow run builder.yaml \
+            --ref "v${{ inputs.version }}" \
+            --field publish=true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
