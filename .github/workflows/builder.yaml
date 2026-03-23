@@ -5,6 +5,9 @@ env:
   BUILD_ARGS: "--test"
 
 on:
+  release:
+    types:
+      - published
   push:
     branches:
       - main
