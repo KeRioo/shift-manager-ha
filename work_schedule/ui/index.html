@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <script>document.write('<base href="' + window.location.pathname + '" />');</script>
   <title>Work Schedule</title>
   <link rel="stylesheet" href="ui/style.css" />
@@ -31,9 +34,9 @@
     <!-- ── Calendar view ────────────────────────────── -->
     <section id="view-calendar" class="view active">
       <div class="calendar-controls">
-        <button id="prev-quarter">◀ Poprzedni</button>
-        <span id="quarter-label"></span>
-        <button id="next-quarter">Następny ▶</button>
+        <button id="prev-month">◀ Poprzedni</button>
+        <span id="month-label"></span>
+        <button id="next-month">Następny ▶</button>
       </div>
       <div id="calendar-grid" class="calendar-grid"></div>
     </section>

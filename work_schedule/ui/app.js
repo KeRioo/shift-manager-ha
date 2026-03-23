@@ -132,7 +132,7 @@ async function renderCalendar() {
                   "Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 
   // Label
-  document.getElementById("quarter-label").textContent =
+  document.getElementById("month-label").textContent =
     `${MONTHS[start.getMonth()]} ${start.getFullYear()}`;
 
   // Fetch shifts
@@ -150,8 +150,8 @@ async function renderCalendar() {
   grid.appendChild(buildMonth(start));
 
   // Nav
-  document.getElementById("prev-quarter").onclick = () => { monthOffset--; renderCalendar(); };
-  document.getElementById("next-quarter").onclick = () => { monthOffset++; renderCalendar(); };
+  document.getElementById("prev-month").onclick = () => { monthOffset--; renderCalendar(); };
+  document.getElementById("next-month").onclick = () => { monthOffset++; renderCalendar(); };
 }
 
 function buildMonth(date) {
