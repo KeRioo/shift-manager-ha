@@ -9,7 +9,7 @@ const BASE_PATH = document.baseURI
 const API = window.location.origin + BASE_PATH;
 
 // ── State ───────────────────────────────────────────────────────
-let quarterOffset = 0;          // 0 = current quarter
+let monthOffset = 0;            // 0 = current month (calendar)
 let tlQuarterOffset = 0;        // timeline quarter offset
 let shiftsCache   = {};         // date → shift obj
 let currentView   = "calendar";
@@ -102,6 +102,18 @@ function initTabs() {
 //  CALENDAR VIEW
 // ================================================================
 
+function getMonthRange(offset) {
+  const now = new Date();
+  const rawMonth = now.getMonth() + offset;
+  const year  = now.getFullYear() + Math.floor(rawMonth / 12);
+  const month = ((rawMonth % 12) + 12) % 12;
+
+  const start = new Date(year, month, 1);
+  const end   = new Date(year, month + 1, 0);   // last day of the month
+
+  return { start, end };
+}
+
 function getQuarterRange(offset) {
   const now = new Date();
   const qMonth = Math.floor(now.getMonth() / 3) * 3;   // 0,3,6,9
@@ -114,12 +126,14 @@ function getQuarterRange(offset) {
 }
 
 async function renderCalendar() {
-  const { start, end } = getQuarterRange(quarterOffset);
+  const { start, end } = getMonthRange(monthOffset);
+
+  const MONTHS = ["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec",
+                  "Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 
   // Label
-  const qNum = Math.floor(start.getMonth() / 3) + 1;
   document.getElementById("quarter-label").textContent =
-    `Q${qNum} ${start.getFullYear()}`;
+    `${MONTHS[start.getMonth()]} ${start.getFullYear()}`;
 
   // Fetch shifts
   const from = isoDate(start);
@@ -130,17 +144,14 @@ async function renderCalendar() {
     shifts.forEach(s => shiftsCache[s.date] = s);
   }
 
-  // Build 3 months
+  // Build 1 month
   const grid = document.getElementById("calendar-grid");
   grid.innerHTML = "";
-  for (let m = 0; m < 3; m++) {
-    const monthDate = new Date(start.getFullYear(), start.getMonth() + m, 1);
-    grid.appendChild(buildMonth(monthDate));
-  }
+  grid.appendChild(buildMonth(start));
 
   // Nav
-  document.getElementById("prev-quarter").onclick = () => { quarterOffset--; renderCalendar(); };
-  document.getElementById("next-quarter").onclick = () => { quarterOffset++; renderCalendar(); };
+  document.getElementById("prev-quarter").onclick = () => { monthOffset--; renderCalendar(); };
+  document.getElementById("next-quarter").onclick = () => { monthOffset++; renderCalendar(); };
 }
 
 function buildMonth(date) {
